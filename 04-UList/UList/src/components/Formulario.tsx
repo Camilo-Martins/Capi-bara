@@ -1,11 +1,12 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 import { Product, ProductType } from "../interface/Product.interface";
-
-interface Props {
-  addProduct: (product: Product) => void;
-  products: Product[];
-  
-}
+import { ListContext } from "../context/listContect";
 
 const initialState = {
   id: 999999999,
@@ -15,9 +16,8 @@ const initialState = {
   producType: "Sin tipo",
 };
 
-const Formulario = ({ addProduct,  products }: Props) => {
-
-  const [totalR, setTotalR] = useState<number>(0)
+const Formulario = () => {
+  const [totalR, setTotalR] = useState<number>(0);
   const [lista, setLista] = useState<ProductType[]>([
     "Sin tipo",
     "Aseo Casa",
@@ -30,17 +30,14 @@ const Formulario = ({ addProduct,  products }: Props) => {
     "Tecnología",
   ]);
 
-  const [producto, setProducto] = useState<Product>(initialState);
+  const { agregar, product, products, setProduct } = useContext(ListContext);
 
   useEffect(() => {
     const totalRef = products.reduce((total: number, precio: Product) => {
-  
-        return precio ? Number(precio.price) + total : total;
-    
-      
+      return precio ? Number(precio.price) + total : total;
     }, 0);
 
-   setTotalR(totalRef);
+    setTotalR(totalRef);
   }, [products]);
 
   const handleChange = ({
@@ -48,76 +45,88 @@ const Formulario = ({ addProduct,  products }: Props) => {
   }: ChangeEvent<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >) => {
+    product.id = Date.now();
+    product.inCar = true;
 
-  
+    console.log(value);
 
-    producto.id  = Date.now()
-    producto.inCar = false;
-
-    console.log(value)
-
-    setProducto({ ...producto, [name]:value });
+    setProduct({ ...product, [name]: value });
   };
 
   const handleNewItem = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(producto.name.length === 0) return alert("Debes agregar un nombre")
+    if (product.name.length === 0) return alert("Debes agregar un nombre");
 
-    addProduct(producto);
+    agregar(product);
 
-    setProducto(initialState);
+    setProduct(initialState);
   };
 
   return (
-    <div  style={{ maxHeight: '365px', height:'400px' }} >
+    <div style={{ maxHeight: "365px", height: "400px" }}>
       <h1 className="text-center">Agrega tus Productos</h1>
       <form action="" onSubmit={handleNewItem}>
         <div>
-          <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="name">Nombre Producto</label>
+          <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="name">
+            Nombre Producto
+          </label>
           <input
-          id="name"
+            id="name"
             name="name" // Cambiado de "nombre" a "name" para que coincida con el estado
             className="form-control"
             type="text"
             placeholder="..."
             onChange={handleChange}
-            value={producto.name}
+            value={product.name}
+            maxLength={20}
           />
         </div>
         <div>
-        <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="price">Precio (Opcional)  </label>
+          <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="price">
+            Precio (Opcional){" "}
+          </label>
           <input
-          id="price"
+            id="price"
             name="price" // Cambiado de "precio" a "price" para que coincida con el estado
             className="form-control"
             type="number"
             placeholder="..."
             onChange={handleChange}
-            value={producto.price}
+            value={product.price}
+            maxLength={10}
           />
         </div>
         <div>
-        <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="categoria">Categoria</label>
+          <label
+            className="px-2 py-3 fw-bold text-uppercase"
+            htmlFor="categoria"
+          >
+            Categoria
+          </label>
           <select
-          id="categoria"
+            id="categoria"
             className="form-control"
             name="producType" // Cambiado de "categoria" a "productType" para que coincida con el estado
             onChange={handleChange}
           >
             {lista.map((e, index) => (
-              <option   value={e} key={index}>
+              <option value={e} key={index}>
                 {e}
               </option>
             ))}
           </select>
         </div>
-        <button className="btn btn-primary form-control my-4"> Agregar item</button>
+        <button className="btn btn-primary form-control my-4">
+          {" "}
+          Agregar item
+        </button>
       </form>
 
-      <hr/>
-      <h5 className="text-center">Total referencial: <span className="fw-bold"> {totalR}</span></h5>
-      
+      <hr />
+      <h5 className="text-center">
+        Total referencial: <span className="fw-bold"> {totalR}</span>
+      </h5>
     </div>
   );
 };
