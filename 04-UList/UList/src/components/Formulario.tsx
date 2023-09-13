@@ -6,15 +6,9 @@ import React, {
   useContext,
 } from "react";
 import { Product, ProductType } from "../interface/Product.interface";
-import { ListContext } from "../context/listContect";
+import { ListContext } from "../context/ListContect";
 
-const initialState = {
-  id: 999999999,
-  name: "",
-  price: 0,
-  inCar: false, // El nombre del campo en el estado es "inCar"
-  producType: "Sin tipo",
-};
+
 
 const Formulario = () => {
   const [totalR, setTotalR] = useState<number>(0);
@@ -30,7 +24,7 @@ const Formulario = () => {
     "Tecnología",
   ]);
 
-  const { agregar, product, products, setProduct } = useContext(ListContext);
+  const { agregar, product, products, setProduct, editar } = useContext(ListContext);
 
   useEffect(() => {
     const totalRef = products.reduce((total: number, precio: Product) => {
@@ -44,13 +38,23 @@ const Formulario = () => {
     target: { name, value },
   }: ChangeEvent<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >) => {
-    product.id = Date.now();
-    product.inCar = true;
+  >, id? : number) => {
 
-    console.log(value);
+    if(!id){
+      product.id = Date.now();
+      product.inCar = false;
+  
+    
+  
+      console.log(value);
+  
+      setProduct({ ...product, [name]: value });
+    }else{
+      editar(id)
 
-    setProduct({ ...product, [name]: value });
+      console.log(product)
+    }
+   
   };
 
   const handleNewItem = (e: FormEvent<HTMLFormElement>) => {
@@ -60,7 +64,7 @@ const Formulario = () => {
 
     agregar(product);
 
-    setProduct(initialState);
+   
   };
 
   return (
@@ -125,7 +129,7 @@ const Formulario = () => {
 
       <hr />
       <h5 className="text-center">
-        Total referencial: <span className="fw-bold"> {totalR}</span>
+        Total referencial: <span className="fw-bold"> $ {totalR} CLP</span>
       </h5>
     </div>
   );

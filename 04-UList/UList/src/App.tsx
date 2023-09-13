@@ -12,7 +12,7 @@ const App = () => {
   return (
     <>
       <ListProvider>
-        <div className="body">
+        {/* <div className="body">
           <div className="container my-5 py-5 bg-light rounded">
             <h1 className="text-center uppercase">TU LISTA DE COMPRAS</h1>
             <div className="row">
@@ -30,8 +30,8 @@ const App = () => {
               </div>
             </div>
           </div>
-        </div>
-       
+        </div> */}
+       <Prueba/>
       </ListProvider>
     </>
   );

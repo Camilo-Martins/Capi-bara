@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Product } from "../interface/Product.interface";
-import { ListProvider } from "../context/ListProvider";
-import { ListContext } from "../context/listContect";
+import { ListContext } from "../context/ListContect";
 
 const Lista = () => {
   const [totalR, setTotalR] = useState<number>(0);
 
-  const { products } = useContext(ListContext);
+  const { products, agregarCarro, setProducts, eliminar } = useContext(ListContext);
 
   useEffect(() => {
     const totalRef = products.reduce((total: number, precio: Product) => {
@@ -18,6 +17,18 @@ const Lista = () => {
 
     setTotalR(totalRef);
   }, [products]);
+
+  const handleAgregarCarro = (id: number) =>{
+  
+  
+    agregarCarro(id)
+  
+
+  }
+
+  const handleEliminar = (id: number) =>{
+    eliminar(id)
+  }
 
   return (
     <div>
@@ -46,7 +57,7 @@ const Lista = () => {
                   type="checkbox"
                   name=""
                   id=""
-                  onClick={() => product.inCar === false}
+                  onClick={() => handleAgregarCarro(product.id)}
                 />
               </div>
 
@@ -54,11 +65,11 @@ const Lista = () => {
                 <h4 className="card-title text-left">Acciones: </h4>
                 <button
                   className="btn btn-warning"
-                  onClick={() => console.log(product.id)}
+                  onClick={() => console.log(product)}
                 >
                   Editar Producto
                 </button>
-                <button className="btn btn-danger">Eliminar Producto</button>
+                <button className="btn btn-danger" onClick={() => handleEliminar(product.id)}>Eliminar Producto</button>
               </div>
             </div>
           </div>
@@ -67,7 +78,7 @@ const Lista = () => {
 
       <hr />
       <h5 className="text-center">
-        Total Real: <span className="fw-bold">{totalR}</span>
+        Total Real: <span className="fw-bold">$ {totalR} CLP</span>
       </h5>
     </div>
   );
