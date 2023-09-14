@@ -4,8 +4,7 @@ import { ListContext } from "../context/ListContect";
 
 const Lista = () => {
   const [totalR, setTotalR] = useState<number>(0);
-
-  const { products, agregarCarro, setProducts, eliminar } = useContext(ListContext);
+  const { products, agregarCarro, setProducts, eliminar, setProduct, setIsEdit, isEdit } = useContext(ListContext);
 
   useEffect(() => {
     const totalRef = products.reduce((total: number, precio: Product) => {
@@ -27,7 +26,19 @@ const Lista = () => {
   }
 
   const handleEliminar = (id: number) =>{
+
+    if(isEdit === true) {
+      console.log(isEdit)
+      return alert("No puedes eliminar un producto que estés editando.")
+    }
     eliminar(id)
+  }
+
+  const handleEditar = (id: number, product: Product) =>{
+  
+    setIsEdit(true)
+    setProduct({ ...product });
+
   }
 
   return (
@@ -65,7 +76,7 @@ const Lista = () => {
                 <h4 className="card-title text-left">Acciones: </h4>
                 <button
                   className="btn btn-warning"
-                  onClick={() => console.log(product)}
+                  onClick={() => handleEditar(product.id, product)}
                 >
                   Editar Producto
                 </button>

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Product, ProductType } from "../interface/Product.interface";
 import { ListContext } from "../context/ListContect";
+import { initialState } from "../context/ListProvider";
 
 
 
@@ -60,8 +61,8 @@ const Formulario = () => {
     }
 
     
-
-   
+    setProduct(initialState)
+    console.log(product)
   };
 
   useEffect(() => {

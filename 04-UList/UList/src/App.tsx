@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Formulario from "./components/Formulario";
-import Lista from "./components/Lista";
+import Formulario from "./pages/Formulario";
+import Lista from "./pages/Lista";
 import { Product } from "./interface/Product.interface";
 import { ListProvider } from "./context/ListProvider";
-import Prueba from "./components/Prueba";
+import Prueba from "./pages/Prueba";
 
 const App = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,7 +12,7 @@ const App = () => {
   return (
     <>
       <ListProvider>
-        {/* <div className="body">
+       <div className="body">
           <div className="container my-5 py-5 bg-light rounded">
             <h1 className="text-center uppercase">TU LISTA DE COMPRAS</h1>
             <div className="row">
@@ -30,8 +30,8 @@ const App = () => {
               </div>
             </div>
           </div>
-        </div> */}
-       <Prueba/>
+        </div>  
+        
       </ListProvider>
     </>
   );

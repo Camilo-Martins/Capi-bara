@@ -4,6 +4,8 @@ import { Product } from '../interface/Product.interface'
 
 type ListContextProps = {
     product : Product;
+    isEdit: boolean;
+    setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
     setProduct: React.Dispatch<React.SetStateAction<Product>>;
     setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
     products : Product[];

@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import { Product, ProductType } from "../interface/Product.interface";
 import { ListContext } from "../context/ListContect";
-
-
+import { initialState } from "../context/ListProvider";
+import Input from "../components/Input";
 
 const Formulario = () => {
   const [totalR, setTotalR] = useState<number>(0);
@@ -24,7 +24,8 @@ const Formulario = () => {
     "Tecnología",
   ]);
 
-  const { agregar, product, products, setProduct, editar } = useContext(ListContext);
+  const { agregar, product, products, setProduct, editar, isEdit, setIsEdit } =
+    useContext(ListContext);
 
   useEffect(() => {
     const totalRef = products.reduce((total: number, precio: Product) => {
@@ -38,23 +39,8 @@ const Formulario = () => {
     target: { name, value },
   }: ChangeEvent<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >, id? : number) => {
-
-    if(!id){
-      product.id = Date.now();
-      product.inCar = false;
-  
-    
-  
-      console.log(value);
-  
-      setProduct({ ...product, [name]: value });
-    }else{
-      editar(id)
-
-      console.log(product)
-    }
-   
+  >) => {
+    setProduct({ ...product, [name]: value });
   };
 
   const handleNewItem = (e: FormEvent<HTMLFormElement>) => {
@@ -62,45 +48,44 @@ const Formulario = () => {
 
     if (product.name.length === 0) return alert("Debes agregar un nombre");
 
-    agregar(product);
-
-   
+    if (isEdit === false) {
+      agregar(product);
+      setProduct(initialState);
+    } else {
+      editar(product.id, product);
+      setProduct(initialState);
+    }
   };
 
   return (
     <div style={{ maxHeight: "365px", height: "400px" }}>
-      <h1 className="text-center">Agrega tus Productos</h1>
+      {isEdit ? (
+        <h1 className="text-center">Edita un Producto</h1>
+      ) : (
+        <h1 className="text-center">Agrega tus Productos</h1>
+      )}
+
       <form action="" onSubmit={handleNewItem}>
-        <div>
-          <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="name">
-            Nombre Producto
-          </label>
-          <input
-            id="name"
-            name="name" // Cambiado de "nombre" a "name" para que coincida con el estado
-            className="form-control"
-            type="text"
-            placeholder="..."
-            onChange={handleChange}
-            value={product.name}
-            maxLength={20}
-          />
-        </div>
-        <div>
-          <label className="px-2 py-3 fw-bold text-uppercase" htmlFor="price">
-            Precio (Opcional){" "}
-          </label>
-          <input
-            id="price"
-            name="price" // Cambiado de "precio" a "price" para que coincida con el estado
-            className="form-control"
-            type="number"
-            placeholder="..."
-            onChange={handleChange}
-            value={product.price}
-            maxLength={10}
-          />
-        </div>
+        <Input
+          id={"name"}
+          name={"name"}
+          label={"Nombre Producto"}
+          htmlF={"name"}
+          type={"text"}
+          pl={"..."}
+          onChange={handleChange}
+          value={product.name}
+        />
+        <Input
+         id={"price"}
+         name={"price"}
+         label={"Precio(Opcional)"}
+         htmlF={"price"}
+         type={"number"}
+         pl={"0"}
+         onChange={handleChange}
+         value={product.price}
+        />
         <div>
           <label
             className="px-2 py-3 fw-bold text-uppercase"
@@ -113,6 +98,7 @@ const Formulario = () => {
             className="form-control"
             name="producType" // Cambiado de "categoria" a "productType" para que coincida con el estado
             onChange={handleChange}
+            value={product.producType}
           >
             {lista.map((e, index) => (
               <option value={e} key={index}>
@@ -121,10 +107,28 @@ const Formulario = () => {
             ))}
           </select>
         </div>
-        <button className="btn btn-primary form-control my-4">
-          {" "}
-          Agregar item
-        </button>
+        {isEdit ? (
+          <>
+            <button className="btn btn-success form-control my-4">
+              {" "}
+              Editar Producto
+            </button>
+            <input
+              className="btn btn-danger form-control"
+              type="button"
+              value="Cancelar edición"
+              onClick={() => {
+                setIsEdit(false);
+                setProduct(initialState);
+              }}
+            />
+          </>
+        ) : (
+          <button className="btn btn-primary form-control my-4">
+            {" "}
+            Agregar item
+          </button>
+        )}
       </form>
 
       <hr />

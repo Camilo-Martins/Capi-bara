@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Product } from "../interface/Product.interface";
 import { ListContext } from "./ListContect";
 
-const initialState = {
+export const initialState = {
     id: 999999999,
     name: "",
     price: 0 ,
@@ -15,18 +15,26 @@ export const ListProvider =  ({children} : any) =>{
 
     const [products, setProducts] = useState<Product[]>([]);
     const [product, setProduct] = useState<Product>(initialState);
+    const [isEdit, setIsEdit] = useState<boolean>(false)
 
+    
     const agregar = (product: Product) =>{
 
         product.id = Date.now();
         product.inCar = false;
 
-
-      
-            console.log(product.id)
-            setProducts([...products, product])
-            setProduct(initialState)
        
+
+        if(product.price.toString().startsWith("0")){
+            product.price = Number(product.price.toString().slice(1))
+        }
+
+       
+
+
+            setProducts([...products, product])
+          
+       setProduct(initialState)
 
         
     }
@@ -47,7 +55,7 @@ export const ListProvider =  ({children} : any) =>{
             producType: produc.producType, inCar: produc.inCar} : product)
         )
 
-        setProduct(initialState)
+    
     }
 
     const eliminar = (id: number) =>{
@@ -58,13 +66,15 @@ export const ListProvider =  ({children} : any) =>{
         )
 
 
-        console.log(products)
+       
     }
 
     return(
         <ListContext.Provider
             value={{
                product,
+               isEdit,
+               setIsEdit,
                setProduct,
                setProducts,
                products,     
