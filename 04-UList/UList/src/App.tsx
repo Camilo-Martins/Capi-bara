@@ -15,6 +15,7 @@ const App = () => {
        <div className="body">
           <div className="container my-5 py-5 bg-light rounded">
             <h1 className="text-center uppercase">TU LISTA DE COMPRAS</h1>
+            <hr />
             <div className="row">
               <div className="col-md-6">
                 <div className="element">

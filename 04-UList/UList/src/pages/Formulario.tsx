@@ -9,31 +9,15 @@ import { Product, ProductType } from "../interface/Product.interface";
 import { ListContext } from "../context/ListContect";
 import { initialState } from "../context/ListProvider";
 import Input from "../components/Input";
+import Select from "../components/Select";
+import { lista } from "../interface/Product.interface";
+import { calcularTotal } from "../hooks/calcularTotal";
 
 const Formulario = () => {
-  const [totalR, setTotalR] = useState<number>(0);
-  const [lista, setLista] = useState<ProductType[]>([
-    "Sin tipo",
-    "Aseo Casa",
-    "Aseo Personal",
-    "Comida fresca",
-    "Congelados",
-    "Dulces",
-    "Herramientas",
-    "Otros",
-    "Tecnología",
-  ]);
+  const { totalR } = calcularTotal();
 
   const { agregar, product, products, setProduct, editar, isEdit, setIsEdit } =
     useContext(ListContext);
-
-  useEffect(() => {
-    const totalRef = products.reduce((total: number, precio: Product) => {
-      return precio ? Number(precio.price) + total : total;
-    }, 0);
-
-    setTotalR(totalRef);
-  }, [products]);
 
   const handleChange = ({
     target: { name, value },
@@ -54,6 +38,7 @@ const Formulario = () => {
     } else {
       editar(product.id, product);
       setProduct(initialState);
+      setIsEdit(false);
     }
   };
 
@@ -77,36 +62,21 @@ const Formulario = () => {
           value={product.name}
         />
         <Input
-         id={"price"}
-         name={"price"}
-         label={"Precio(Opcional)"}
-         htmlF={"price"}
-         type={"number"}
-         pl={"0"}
-         onChange={handleChange}
-         value={product.price}
+          id={"price"}
+          name={"price"}
+          label={"Precio(Opcional)"}
+          htmlF={"price"}
+          type={"number"}
+          pl={"0"}
+          onChange={handleChange}
+          value={product.price}
         />
-        <div>
-          <label
-            className="px-2 py-3 fw-bold text-uppercase"
-            htmlFor="categoria"
-          >
-            Categoria
-          </label>
-          <select
-            id="categoria"
-            className="form-control"
-            name="producType" // Cambiado de "categoria" a "productType" para que coincida con el estado
-            onChange={handleChange}
-            value={product.producType}
-          >
-            {lista.map((e, index) => (
-              <option value={e} key={index}>
-                {e}
-              </option>
-            ))}
-          </select>
-        </div>
+
+        <Select
+          lista={lista}
+          value={product.producType}
+          onChange={handleChange}
+        />
         {isEdit ? (
           <>
             <button className="btn btn-success form-control my-4">
