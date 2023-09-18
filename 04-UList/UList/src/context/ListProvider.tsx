@@ -13,7 +13,9 @@ export const initialState = {
 
 export const ListProvider =  ({children} : any) =>{
 
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<Product[]>(
+        localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')) || "" : []
+    );
     const [product, setProduct] = useState<Product>(initialState);
     const [isEdit, setIsEdit] = useState<boolean>(false)
 
@@ -29,7 +31,11 @@ export const ListProvider =  ({children} : any) =>{
             product.price = Number(product.price.toString().slice(1))
         }
 
-       
+        if(product.price.toString().includes("e")){
+           
+            product.price = Number(product.price.toString().replace('e',''))
+        }
+
 
 
             setProducts([...products, product])

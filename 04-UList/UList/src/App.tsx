@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Formulario from "./pages/Formulario";
 import Lista from "./pages/Lista";
 import { Product } from "./interface/Product.interface";
 import { ListProvider } from "./context/ListProvider";
 import Prueba from "./pages/Prueba";
+import { ListContext } from "./context/ListContect";
 
 const App = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  
 
  
+  
+
+  
+ 
+
   return (
     <>
       <ListProvider>
@@ -30,9 +36,11 @@ const App = () => {
                 </div>
               </div>
             </div>
+           
           </div>
+          
         </div>  
-        
+       
       </ListProvider>
     </>
   );

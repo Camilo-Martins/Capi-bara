@@ -12,6 +12,7 @@ interface Props {
   handleAgregarCarro: (id: number) => void;
   handleEliminar: (id: number) => void;
   handleEditar: (id: number, product: Product) => void;
+ 
 }
 
 const Card = ({
@@ -19,6 +20,7 @@ const Card = ({
   handleAgregarCarro,
   handleEditar,
   handleEliminar,
+  
 }: Props) => {
   const iconSize = {
     fontSize: "2rem", // Tamaño del icono
