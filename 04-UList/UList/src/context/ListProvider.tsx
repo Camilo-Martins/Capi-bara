@@ -3,95 +3,87 @@ import { Product } from "../interface/Product.interface";
 import { ListContext } from "./ListContect";
 
 export const initialState = {
-    id: 999999999,
-    name: "",
-    price: 0 ,
-    inCar: false, // El nombre del campo en el estado es "inCar"
-    producType: "Sin tipo",
+  id: 999999999,
+  name: "",
+  price: 0,
+  inCar: false, // El nombre del campo en el estado es "inCar"
+  producType: "Sin tipo",
+};
+
+export const ListProvider = ({ children }: any) => {
+  const [products, setProducts] = useState<Product[]>(
+    localStorage.getItem("products")
+      ? JSON.parse(localStorage.getItem("products")) || ""
+      : []
+  );
+  const [product, setProduct] = useState<Product>(initialState);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  const agregar = (product: Product) => {
+    product.id = Date.now();
+    product.inCar = false;
+
+    if (product.price.toString().includes("e")) {
+      // return alert("Verifique que el precio solo tenga números.")
+      product.price = Number(product.price.toString().replace("e", ""));
+      console.log("tiene e");
+    }
+
+    if (product.price.toString().startsWith("0")) {
+      //return alert("Verifique que el precio no inicie con 0.")
+      product.price = Number(product.price.toString().slice(1));
+      console.log("tiene 0");
+    }
+
+    setProducts([...products, product]);
+
+    setProduct(initialState);
   };
 
-
-export const ListProvider =  ({children} : any) =>{
-
-    const [products, setProducts] = useState<Product[]>(
-        localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')) || "" : []
+  const agregarCarro = (id: number) => {
+    setProducts(
+      products.map((produc) =>
+        produc.id === id ? { ...produc, inCar: !produc.inCar } : produc
+      )
     );
-    const [product, setProduct] = useState<Product>(initialState);
-    const [isEdit, setIsEdit] = useState<boolean>(false)
+  };
 
-    
-    const agregar = (product: Product) =>{
+  const editar = (id: number, produc: Product) => {
+    setProducts(
+      products.map((product) =>
+        product.id === id
+          ? {
+              ...product,
+              name: produc.name,
+              price: produc.price,
+              producType: produc.producType,
+              inCar: produc.inCar,
+            }
+          : product
+      )
+    );
+  };
 
-        product.id = Date.now();
-        product.inCar = false;
+  const eliminar = (id: number) => {
+    setProducts(products.filter((product) => product.id !== id));
+  };
 
-       
-
-        if(product.price.toString().startsWith("0")){
-            product.price = Number(product.price.toString().slice(1))
-        }
-
-        if(product.price.toString().includes("e")){
-           
-            product.price = Number(product.price.toString().replace('e',''))
-        }
-
-
-
-            setProducts([...products, product])
-          
-       setProduct(initialState)
-
-        
-    }
-
-    const agregarCarro = (id: number) =>{
-        setProducts(
-            products.map((produc) =>
-              produc.id === id ? {...produc, inCar: !produc.inCar} : produc
-            )
-          )
-    }
-
-    const editar = (id: number, produc: Product) =>{
-       
-        setProducts(
-            products.map((product) =>
-            product.id === id ? {...product, name: produc.name, price: produc.price,
-            producType: produc.producType, inCar: produc.inCar} : product)
-        )
-
-    
-    }
-
-    const eliminar = (id: number) =>{
-        setProducts(
-            products.filter(product =>
-                product.id !== id
-                )
-        )
-
-
-       
-    }
-
-    return(
-        <ListContext.Provider
-            value={{
-               product,
-               isEdit,
-               setIsEdit,
-               setProduct,
-               setProducts,
-               products,     
-               agregar,
-               agregarCarro ,
-               editar,
-               eliminar
-        
-            }}
-        >
-            {children}
-        </ListContext.Provider>
-    )
-}
+  return (
+    <ListContext.Provider
+      value={{
+        product,
+        isEdit,
+        setIsEdit,
+        setProduct,
+        setProducts,
+        products,
+        agregar,
+        agregarCarro,
+        editar,
+        eliminar,
+      }}
+    >
+      {children}
+    </ListContext.Provider>
+  );
+};

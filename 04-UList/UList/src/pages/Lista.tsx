@@ -4,6 +4,9 @@ import { ListContext } from "../context/ListContect";
 import { calcularTotal } from "../hooks/calcularTotal";
 import Card from "../components/Card";
 import { exportData } from "../helpers/exportData";
+import ReactDOM from "react-dom";
+import QRCode from "react-qr-code";
+import BasicDocument from "../components/exportPDF";
 
 const Lista = () => {
   const [items, setItems] = useState<Product[]>([]);
@@ -19,7 +22,7 @@ const Lista = () => {
   } = useContext(ListContext);
 
   const { totalReal } = calcularTotal();
-  const { exportList } = exportData();
+  const { DescargarCSV } = exportData();
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("products") || "");
@@ -72,7 +75,7 @@ const Lista = () => {
       <h5 className="text-center">
         Total Real: <span className="fw-bold">$ {totalReal} CLP</span>
       </h5>
-      <button className="btn btn-primary" onClick={() => exportList()}>
+      <button className="btn btn-primary" onClick={() => DescargarCSV()}>
         Exportar Carrito
       </button>
     </div>

@@ -12,20 +12,14 @@ import Input from "../components/Input";
 import Select from "../components/Select";
 import { lista } from "../interface/Product.interface";
 import { calcularTotal } from "../hooks/calcularTotal";
+import { useHandleChange } from "../hooks/useHandleChange";
 
 const Formulario = () => {
   const { totalR } = calcularTotal();
-
   const { agregar, product, products, setProduct, editar, isEdit, setIsEdit } =
-    useContext(ListContext);
+  useContext(ListContext);
+  const { handleChange } = useHandleChange(product, setProduct);
 
-  const handleChange = ({
-    target: { name, value },
-  }: ChangeEvent<
-    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  >) => {
-    setProduct({ ...product, [name]: value });
-  };
 
   const handleNewItem = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
