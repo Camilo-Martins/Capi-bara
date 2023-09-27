@@ -10,6 +10,7 @@ import React, {useContext} from 'react';
 import {ListContextProps} from '../context/ListContext';
 import {Product} from '../interfaces/Product.interface';
 import Item from '../components/Item';
+import { useForm } from '../hooks/useForm';
 
 const Lista = () => {
   const {
@@ -25,7 +26,18 @@ const Lista = () => {
     editar,
   } = useContext(ListContextProps);
 
+  const {name, price, inCar, onChange, setFormValue} = useForm({
+    name: '',
+    price: 0,
+    inCar: false,
+    producType: '',
+  });
+
+
   const handleEditar = (id: number) => {
+ 
+   
+
     setIsEdit(true);
     agregarCarro(id);
   };
@@ -35,10 +47,14 @@ const Lista = () => {
   };
 
   const handleAddCarro = (id: number, item: Product) => {
-    setProduct(item);
+   
+    
+
+    setProduct(item)
     setIsModal(true);
     setIsEdit(true);
     editar(id, item);
+    
   };
 
   return (

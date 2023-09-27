@@ -3,6 +3,7 @@ import { Product, data } from '../interfaces/Product.interface';
 import { ListContextProps } from './ListContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import { useForm } from '../hooks/useForm';
 
 export const inicialState = {
   id: 999999999,
@@ -76,11 +77,9 @@ export const ListProvider = ({ children }: any) => {
     product.id = Date.now();
     product.inCar = false;
 
-    if (product.price.toString().includes('e')) {
-      // return alert("Verifique que el precio solo tenga números.")
-      product.price = Number(product.price.toString().replace('e', ''));
-   
-    }
+  const priceFormated =  product.price.toString().replace(/[- #*;,._<>\{\}\[\]\\\/]/gi, '')
+
+  product.price = Number(priceFormated)
 
     if (product.price.toString().startsWith('0')) {
       //return alert("Verifique que el precio no inicie con 0.")
@@ -102,9 +101,11 @@ export const ListProvider = ({ children }: any) => {
     );
   };
 
+
   const editar = (id: number, produc: Product) => {
     //TODO: FORMAREAR PRECIO
-  
+   
+    
 
     setProducts(
       products.map(product =>
@@ -119,6 +120,9 @@ export const ListProvider = ({ children }: any) => {
           : product,
       ),
     );
+
+          console.log(produc)
+
   };
 
   const eliminar = (id: number) => {

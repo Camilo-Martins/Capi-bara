@@ -1,12 +1,13 @@
 import {View, Text, Modal, TextInput, Alert, Pressable} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {ListContextProps} from '../context/ListContext';
 import {SelectList} from 'react-native-dropdown-select-list';
 import {data} from '../interfaces/Product.interface';
 import {useForm} from '../hooks/useForm';
+import { inicialState } from '../context/ListProvider';
 
 const AddItem = () => {
-  const {isEdit, setIsEdit, agregar, product, editar, isModal, setIsModal} =
+  const {isEdit, setIsEdit, agregar, product, editar, isModal, setIsModal, setProducts, setProduct} =
     useContext(ListContextProps);
   const [selected, setSelected] = React.useState('');
 
@@ -17,7 +18,22 @@ const AddItem = () => {
     producType: '',
   });
 
-  const handleNuevoProducto = () => {
+  useEffect(()=>{
+    onChange(product.name, "name")
+  },[isEdit])
+
+
+  const handleAgregar = () => {
+
+    const chars = ["-", "_", " ", "-", ",", "."]
+
+    console.log(price.toString())
+
+    if(chars.includes.toString().includes(price.toString())){
+      console.log("xd")
+      return Alert.alert("El precio solo puede contener números")
+    }
+
     if (selected.length === 0) {
       return Alert.alert('Seleccione una categoría');
     }
@@ -28,6 +44,7 @@ const AddItem = () => {
 
     setSelected('');
   
+  
 
     setFormValue({
       name: '',
@@ -37,13 +54,16 @@ const AddItem = () => {
     });
   };
 
-  const handleEditar = () => {
-    editar(product.id, {...product, name, price, producType: selected, inCar});
+  const handleEditar = async () => {
+  
+   const newPrice = Number(price.toString().replace(/[- #*;,._<>\{\}\[\]\\\/]/gi, ''))
+
+    editar(product.id, {...product, name,price: newPrice, producType: selected, inCar});
     setIsModal(!isModal);
 
-    setIsEdit(!isEdit);
+    setIsEdit(false);
     setSelected('');
-
+    setProduct(inicialState)
     setFormValue({
       name: '',
       price: 0,
@@ -51,6 +71,19 @@ const AddItem = () => {
       producType: selected,
     });
   };
+
+  const handleVolver = () =>{
+   
+    setIsEdit(false);
+    setProduct(inicialState)
+    setFormValue({
+      name: '',
+      price: 0,
+      inCar: false,
+      producType: selected,
+    });
+    setIsModal(!isModal);
+  }
 
   return (
     <Modal animationType="slide" transparent={false} visible={isModal}>
@@ -72,7 +105,7 @@ const AddItem = () => {
           <TextInput
             onChangeText={value => onChange(value, 'price')}
             value={price.toString()}
-            keyboardType="numeric"
+          keyboardType='numeric'
           />
 
           <SelectList
@@ -92,16 +125,13 @@ const AddItem = () => {
               <Text>Modifica el producto</Text>
             </Pressable>
           ) : (
-            <Pressable onPress={() => handleNuevoProducto()}>
+            <Pressable onPress={() => handleAgregar()}>
               <Text>Agregar Producto</Text>
             </Pressable>
           )}
 
           <Pressable
-            onPress={() => {
-              setIsModal(!isModal);
-              setIsEdit(false);
-            }}>
+            onPress={() => handleVolver()}>
             <Text>Volver</Text>
           </Pressable>
         </View>

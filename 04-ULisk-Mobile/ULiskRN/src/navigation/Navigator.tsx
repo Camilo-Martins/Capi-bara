@@ -14,7 +14,7 @@ const Navigator = () => {
   
 
   
-  console.log("no hay data en nav" )
+
 
   
 

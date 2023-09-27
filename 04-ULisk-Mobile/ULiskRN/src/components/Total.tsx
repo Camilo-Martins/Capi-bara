@@ -12,8 +12,7 @@ const Total = () => {
     useEffect(() => {
       const calculoTotal = products.reduce((total: number , price: Product ) =>{
         if(price.inCar === true){
-            console.log(typeof price.price)
-            console.log(typeof total)
+           
             return price ? Number(price.price) + total : total;
         }else{
            return  total
