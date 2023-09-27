@@ -16,6 +16,9 @@ type ListContextProps ={
     agregarCarro: (id: number) => void;
     editar: (id: number, product: Product) => void;
     eliminar: (id: number) => void;
+    eliminarInfo: () => void;
+    isData: boolean,
+    setIsData: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ListContextProps = createContext({} as ListContextProps)

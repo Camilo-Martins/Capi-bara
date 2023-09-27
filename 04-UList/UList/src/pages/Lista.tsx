@@ -4,17 +4,12 @@ import { ListContext } from "../context/ListContect";
 import { calcularTotal } from "../hooks/calcularTotal";
 import Card from "../components/Card";
 import { exportData } from "../helpers/exportData";
-import ReactDOM from "react-dom";
-import QRCode from "react-qr-code";
-import BasicDocument from "../components/exportPDF";
-
 const Lista = () => {
   const [items, setItems] = useState<Product[]>([]);
 
   const {
     products,
     agregarCarro,
-    setProducts,
     eliminar,
     setProduct,
     setIsEdit,

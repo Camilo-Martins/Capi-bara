@@ -27,7 +27,7 @@ const AddItem = () => {
     setIsModal(!isModal);
 
     setSelected('');
-    console.log(selected);
+  
 
     setFormValue({
       name: '',

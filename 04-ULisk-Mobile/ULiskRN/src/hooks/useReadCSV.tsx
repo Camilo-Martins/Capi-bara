@@ -9,7 +9,7 @@ import { Product } from '../interfaces/Product.interface';
 export const useReadCSV = () => {
   const [csvData, setCsvData] = useState([]);
   const ProductTypes = ['id', 'name', 'price', 'inCar', 'producType'];
-  const {products,setProducts} = useContext(ListContextProps)
+  const {products,setProducts, setIsData} = useContext(ListContextProps)
 
   const readCSV = async (res: any) => {
     //Valida que el documento sea CSV y no otro
@@ -37,6 +37,7 @@ export const useReadCSV = () => {
 
         setCsvData(temp);
         setProducts(temp)
+        setIsData(true)
       } else {
         Alert.alert('La data seleccionada no coincide con la data del archivo');
       }

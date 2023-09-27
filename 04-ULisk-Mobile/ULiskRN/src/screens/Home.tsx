@@ -8,7 +8,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useUploadCSV} from '../hooks/useUploadCSV';
 import {ListContextProps} from '../context/ListContext';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
@@ -18,84 +18,58 @@ import {useForm} from '../hooks/useForm';
 import {inicialState} from '../context/ListProvider';
 import Lista from './Lista';
 import AddItem from './AddItem';
+import { StackScreenProps } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Total from '../components/Total';
 
+interface Props extends StackScreenProps<any, any>{}
 
-
-
-const Home = () => {
+const Home = ({navigation}: Props) => {
   const {
-    products,
-    isEdit,
-    setIsEdit,
-    agregar,
-    product,
-    setProduct,
-    agregarCarro,
-    editar,
     isModal,
     setIsModal,
+    eliminarInfo, 
+    setIsData,
+    isData
   } = useContext(ListContextProps);
-  const [selected, setSelected] = React.useState('');
 
-  const {name, price, inCar, producType, onChange, setFormValue} = useForm({
-    name: '',
-    price: 0,
-    inCar: false,
-    producType: '',
-  });
 
-  const handleNuevoProducto = () => {
-    if (selected.length === 0) {
-      return Alert.alert('Seleccione una categoría');
-    }
 
-    agregar({...product, name, price, producType: selected, inCar});
-
-    setIsModal(!isModal);
-
-    setSelected('');
-    console.log(selected);
-
-    setFormValue({
-      name: '',
-      price: 0,
-      inCar: false,
-      producType: selected,
-    });
-  };
-
-  const handleEditar = () => {
-    editar(product.id, {...product, name, price, producType: selected, inCar});
-    setIsModal(!isModal);
-
-    setIsEdit(!isEdit);
-    setSelected('');
-
-    setFormValue({
-      name: '',
-      price: 0,
-      inCar: false,
-      producType: selected,
-    });
-  };
+  const resetearApp = async () =>{
+ eliminarInfo()
+navigation.replace('Principal')
+  
+  
+  }
 
   return (
     <View style={styles.container}>
      
       <AddItem/>
+   
+       
+    
 
-      <View style={styles.containerHeader}>
-        <Text>Lista tu Lista</Text>
-        <TouchableOpacity onPress={() => setIsModal(!isModal)}>
-          <Text>Agregar nuevo producto</Text>
-        </TouchableOpacity>
+     <View style={styles.containerHeader}>
+      <Text>Lista tu Lista</Text>
+      <TouchableOpacity onPress={() => setIsModal(!isModal)}>
+        <Text>Agregar nuevo producto</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Text>Eliminar data</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => resetearApp()}
+
+      >
+        <Text>Eliminar data</Text>
+      </TouchableOpacity>
+    </View>
+     
+
 
       <Lista />
+      <View style={{marginHorizontal: 16, marginBottom: 50, borderRadius: 10, borderColor: "red", borderWidth: 1}}>
+        <Total/>
+      </View>
     </View>
   );
 };
