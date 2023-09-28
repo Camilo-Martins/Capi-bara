@@ -1,14 +1,31 @@
-import {View, Text, Modal, TextInput, Alert, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TextInput,
+  Alert,
+  Pressable,
+  StyleSheet,
+} from 'react-native';
 import React, {useContext, useEffect} from 'react';
 import {ListContextProps} from '../context/ListContext';
 import {SelectList} from 'react-native-dropdown-select-list';
 import {data} from '../interfaces/Product.interface';
 import {useForm} from '../hooks/useForm';
-import { inicialState } from '../context/ListProvider';
+import {inicialState} from '../context/ListProvider';
+import {globalStyles} from '../styles';
 
 const AddItem = () => {
-  const {isEdit, setIsEdit, agregar, product, editar, isModal, setIsModal, setProducts, setProduct} =
-    useContext(ListContextProps);
+  const {
+    isEdit,
+    setIsEdit,
+    agregar,
+    product,
+    editar,
+    isModal,
+    setIsModal,
+    setProduct,
+  } = useContext(ListContextProps);
   const [selected, setSelected] = React.useState('');
 
   const {name, price, inCar, onChange, setFormValue} = useForm({
@@ -18,22 +35,11 @@ const AddItem = () => {
     producType: '',
   });
 
-  useEffect(()=>{
-    onChange(product.name, "name")
-  },[isEdit])
-
+  useEffect(() => {
+    onChange(product.name, 'name');
+  }, [isEdit]);
 
   const handleAgregar = () => {
-
-    const chars = ["-", "_", " ", "-", ",", "."]
-
-    console.log(price.toString())
-
-    if(chars.includes.toString().includes(price.toString())){
-      console.log("xd")
-      return Alert.alert("El precio solo puede contener números")
-    }
-
     if (selected.length === 0) {
       return Alert.alert('Seleccione una categoría');
     }
@@ -43,8 +49,6 @@ const AddItem = () => {
     setIsModal(!isModal);
 
     setSelected('');
-  
-  
 
     setFormValue({
       name: '',
@@ -55,15 +59,22 @@ const AddItem = () => {
   };
 
   const handleEditar = async () => {
-  
-   const newPrice = Number(price.toString().replace(/[- #*;,._<>\{\}\[\]\\\/]/gi, ''))
+    const newPrice = Number(
+      price.toString().replace(/[- #*;,._<>\{\}\[\]\\\/]/gi, ''),
+    );
 
-    editar(product.id, {...product, name,price: newPrice, producType: selected, inCar});
+    editar(product.id, {
+      ...product,
+      name,
+      price: newPrice,
+      producType: selected,
+      inCar,
+    });
     setIsModal(!isModal);
 
     setIsEdit(false);
     setSelected('');
-    setProduct(inicialState)
+    setProduct(inicialState);
     setFormValue({
       name: '',
       price: 0,
@@ -72,10 +83,9 @@ const AddItem = () => {
     });
   };
 
-  const handleVolver = () =>{
-   
+  const handleVolver = () => {
     setIsEdit(false);
-    setProduct(inicialState)
+    setProduct(inicialState);
     setFormValue({
       name: '',
       price: 0,
@@ -83,61 +93,89 @@ const AddItem = () => {
       producType: selected,
     });
     setIsModal(!isModal);
-  }
+  };
 
   return (
     <Modal animationType="slide" transparent={false} visible={isModal}>
-      <View>
-        <View>
+      <View style={styles.container}>
+        <View style={{paddingTop: 20}}>
           {isEdit ? (
-            <Text> - Modifica tu producto - </Text>
+            <Text style={styles.textTitle}> Modificar producto </Text>
           ) : (
-            <Text> - Añade un nuevo producto a tu Lista - </Text>
+            <Text style={styles.textTitle}> Agregar Producto </Text>
           )}
-
-          <Text> Nombre </Text>
+          <Text style={styles.textLabeL}> Nombre </Text>
           <TextInput
             onChangeText={value => onChange(value, 'name')}
             value={name}
+            maxLength={20}
+            style={styles.inputStyles}
           />
 
-          <Text> Precio </Text>
+          <Text style={styles.textLabeL}> Precio </Text>
           <TextInput
             onChangeText={value => onChange(value, 'price')}
             value={price.toString()}
-          keyboardType='numeric'
+            keyboardType="numeric"
+            maxLength={6}
+            style={styles.inputStyles}
           />
-
+          <Text style={styles.textLabeL}> Categoría </Text>
           <SelectList
-            boxStyles={{
-              marginHorizontal: 20,
-            }}
-            dropdownStyles={{
-              marginHorizontal: 20,
-            }}
             setSelected={(value: string) => setSelected(value)}
             data={data}
             save="value"
           />
 
           {isEdit ? (
-            <Pressable onPress={() => handleEditar()}>
-              <Text>Modifica el producto</Text>
+            <Pressable
+              style={[styles.itemButton, {backgroundColor: '#2F4688'}]}
+              onPress={() => handleEditar()}>
+              <Text style={styles.inputText}>Modifica el producto</Text>
             </Pressable>
           ) : (
-            <Pressable onPress={() => handleAgregar()}>
-              <Text>Agregar Producto</Text>
+            <Pressable
+              style={[styles.itemButton, {backgroundColor: '#7E2DBE'}]}
+              onPress={() => handleAgregar()}>
+              <Text style={styles.inputText}>Agregar Producto</Text>
             </Pressable>
           )}
 
           <Pressable
+            style={[styles.itemButton, {backgroundColor: '#35963E'}]}
             onPress={() => handleVolver()}>
-            <Text>Volver</Text>
+            <Text style={styles.inputText}>Volver</Text>
           </Pressable>
         </View>
       </View>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    ...globalStyles.principalSContainer,
+    backgroundColor: '#F4F5F9',
+  },
+  textTitle: {
+    ...globalStyles.titleText,
+  },
+  textLabeL: {
+    ...globalStyles.genericTouchableText,
+    textAlign: 'left',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  inputStyles: {
+    ...globalStyles.inputStyles,
+  },
+  itemButton: {
+    ...globalStyles.itemButtonForm,
+  },
+  inputText: {
+    ...globalStyles.genericTouchableText,
+    color: '#EAECED',
+  },
+});
 
 export default AddItem;

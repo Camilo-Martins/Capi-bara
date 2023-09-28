@@ -1,12 +1,5 @@
-import {useState} from 'react';
-import {Alert} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
-import {readFile} from 'react-native-fs';
-import XLSX from 'xlsx';
 import {useReadCSV} from './useReadCSV';
-import { StackScreenProps } from '@react-navigation/stack';
-
-interface Props extends StackScreenProps<any, any> {}
 
 export const useUploadCSV = () => {
   const {readCSV, csvData} = useReadCSV();
@@ -18,7 +11,7 @@ export const useUploadCSV = () => {
       });
 
       readCSV(res);
-    } catch (error) { 
+    } catch (error) {
       console.log(error);
     }
   };

@@ -1,99 +1,66 @@
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  StatusBar,
-  Modal,
-  Alert,
-  Pressable,
-} from 'react-native';
-import React, {useContext, useEffect} from 'react';
-import {useUploadCSV} from '../hooks/useUploadCSV';
+import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import React, {useContext} from 'react';
 import {ListContextProps} from '../context/ListContext';
-import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
-import {SelectList} from 'react-native-dropdown-select-list';
-import {Product, data, lista} from '../interfaces/Product.interface';
-import {useForm} from '../hooks/useForm';
-import {inicialState} from '../context/ListProvider';
-import Lista from './Lista';
+import Lista from './ProductsList';
 import AddItem from './AddItem';
-import { StackScreenProps } from '@react-navigation/stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Total from '../components/Total';
+import {StackScreenProps} from '@react-navigation/stack';
+import Total from '../components/TotalList';
+import {globalStyles} from '../styles';
+import OptionButton from '../components/OptionButton';
 
-interface Props extends StackScreenProps<any, any>{}
+interface Props extends StackScreenProps<any, any> {}
 
 const Home = ({navigation}: Props) => {
-  const {
-    isModal,
-    setIsModal,
-    eliminarInfo, 
-    setIsData,
-    isData
-  } = useContext(ListContextProps);
+  const {isModal, setIsModal, eliminarInfo} = useContext(ListContextProps);
 
-
-
-  const resetearApp = async () =>{
- eliminarInfo()
-navigation.replace('Principal')
-  
-  
-  }
+  const resetearApp = async () => {
+    eliminarInfo();
+    navigation.replace('Principal');
+  };
 
   return (
-    <View style={styles.container}>
-     
-      <AddItem/>
-   
-       
-    
+    <SafeAreaView style={styles.container}>
+      <AddItem />
 
-     <View style={styles.containerHeader}>
-      <Text>Lista tu Lista</Text>
-      <TouchableOpacity onPress={() => setIsModal(!isModal)}>
-        <Text>Agregar nuevo producto</Text>
-      </TouchableOpacity>
+      <View style={styles.containerHeader}>
+        <Text style={styles.titleHome}>Lista tu Lista</Text>
 
-      <TouchableOpacity
-        onPress={() => resetearApp()}
-
-      >
-        <Text>Eliminar data</Text>
-      </TouchableOpacity>
-    </View>
-     
-
+        <OptionButton
+          textButton="Agregar Producto"
+          style={[styles.touchableAccion, {backgroundColor: '#385A80'}]}
+          buttonStyle={styles.touchableText}
+          handleOnPress={() => setIsModal(!isModal)}
+        />
+        <OptionButton
+          textButton="Eliminar Lista"
+          style={[styles.touchableAccion, {backgroundColor: '#AC1717'}]}
+          buttonStyle={styles.touchableText}
+          handleOnPress={() => resetearApp()}
+        />
+      </View>
 
       <Lista />
-      <View style={{marginHorizontal: 16, marginBottom: 50, borderRadius: 10, borderColor: "red", borderWidth: 1}}>
-        <Total/>
-      </View>
-    </View>
+
+      <Total />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    ...globalStyles.principalSContainer,
   },
   containerHeader: {
-    backgroundColor: 'blue',
-    marginHorizontal: 16,
-    padding: 10,
-    marginBottom: 10,
+    ...globalStyles.containerHeader,
   },
-
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 10,
-    marginVertical: 10,
-    marginHorizontal: 16,
+  titleHome: {
+    ...globalStyles.titleHome,
   },
-  title: {
-    fontSize: 32,
+  touchableAccion: {
+    ...globalStyles.touchableAccion,
+  },
+  touchableText: {
+    ...globalStyles.touchableText,
   },
 });
 

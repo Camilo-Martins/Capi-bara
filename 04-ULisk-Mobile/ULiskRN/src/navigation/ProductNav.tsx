@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from '../screens/Home'
-import Principal from '../screens/Principal'
+import Principal from '../screens/PrincipalScreen'
 import AddItem from '../screens/AddItem'
 
 export type ProduckStackParams ={

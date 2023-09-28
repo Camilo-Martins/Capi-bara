@@ -1,22 +1,13 @@
-import {View, Text} from 'react-native';
-import {StackScreenProps, createStackNavigator} from '@react-navigation/stack';
-import {useContext, useEffect, useState} from 'react';
+import { createStackNavigator} from '@react-navigation/stack';
+import {useContext} from 'react';
 import {ListContextProps} from '../context/ListContext';
 import Home from '../screens/Home';
-import Principal from '../screens/Principal';
-import { data } from '../interfaces/Product.interface';
+import Principal from '../screens/PrincipalScreen';
 
 const Stack = createStackNavigator();
 
-
 const Navigator = () => {
-  const { isData} = useContext(ListContextProps)
-  
-
-  
-
-
-  
+  const {isData} = useContext(ListContextProps);
 
   return (
     <>
@@ -27,22 +18,16 @@ const Navigator = () => {
             backgroundColor: 'white',
           },
         }}>
-        
         {isData ? (
-           <>
-           
-           <Stack.Screen name="Home" component={Home} />
-          
+          <>
+            <Stack.Screen name="Home" component={Home} />
           </>
         ) : (
           <>
-            
             <Stack.Screen name="Principal" component={Principal} />
             <Stack.Screen name="Home" component={Home} />
           </>
-          
         )}
-      
       </Stack.Navigator>
     </>
   );
